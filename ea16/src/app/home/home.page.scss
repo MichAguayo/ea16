@@ -1,0 +1,30 @@
+.task-container {
+  background: #f4f4f4;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.custom-item {
+  --border-radius: 8px;
+  --background: #ffffff;
+  margin-bottom: 15px;
+}
+
+ion-button {
+  --border-radius: 8px;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
+h2, h3 {
+  color: #333;
+  font-weight: bold;
+}
+
+ion-segment {
+  margin-top: 20px;
+}
