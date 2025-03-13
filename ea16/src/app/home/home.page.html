@@ -1,58 +1,70 @@
 <ion-header>
-  <ion-toolbar color="tertiary">
-    <ion-title>Agenda escolar</ion-title>
+  <ion-toolbar class="header-toolbar">
+    <ion-title class="ion-text-center">Lista de Tareas</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div class="task-container">
-    <h2>Agrega una nueva tarea</h2>
-    <form [formGroup]="taskForm" (ngSubmit)="addTask()">
-      <ion-item class="custom-item">
-        <ion-label position="floating">Título</ion-label>
-        <ion-input formControlName="title"></ion-input>
+  <ion-card>
+    <ion-card-content>
+      <ion-item>
+        <ion-input [(ngModel)]="taskText" placeholder="Escribe una tarea"></ion-input>
+        <ion-button expand="full" (click)="addTask()" color="success">
+          {{ editingTaskId ? 'Actualizar' : 'Agregar' }}
+        </ion-button>
       </ion-item>
+    </ion-card-content>
+  </ion-card>
 
-      <ion-item class="custom-item">
-        <ion-label>Fecha de vencimiento</ion-label>
-        <ion-datetime formControlName="dueDate" presentation="date"></ion-datetime>
-      </ion-item>
-
-      <ion-button type="submit" expand="block" color="success" [disabled]="taskForm.invalid">
-        Añadir Tarea
-      </ion-button>
-    </form>
-
-    <h3>Tareas</h3>
-
-    <ion-segment [(ngModel)]="filter">
-      <ion-segment-button value="all">
-        <ion-label>Todos</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="pending">
-        <ion-label>Pendientes</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="completed">
-        <ion-label>Completadas</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-
-    <ion-list>
-      <ion-item-sliding *ngFor="let task of getFilteredTasks(); let i = index">
-        <ion-item [class.completed]="task.done">
-          <ion-label>
-            <h2>{{ task.title }}</h2>
-            <p>Fecha límite: {{ task.dueDate }}</p>
-          </ion-label>
-          <ion-checkbox (ionChange)="toggleCompletion(i)" [checked]="task.done"></ion-checkbox>
-        </ion-item>
-
-        <ion-item-options side="end">
-          <ion-item-option color="danger" (click)="deleteTask(i)">
-            <ion-icon name="trash-outline"></ion-icon>
-          </ion-item-option>
-        </ion-item-options>
-      </ion-item-sliding>
-    </ion-list>
-  </div>
+  <!-- Lista de tareas desde Firestore -->
+  <ion-list class="task-list">
+    <ion-item *ngFor="let task of tasks$ | async" class="task-item">
+      <ion-label>{{ task.title }}</ion-label>
+      <div class="button-group">
+        <ion-button (click)="editTask(task)" color="secondary">
+          <ion-icon name="create-outline"></ion-icon>
+          Editar
+        </ion-button>
+        <ion-button (click)="deleteTask(task.id!)" color="tertiary">
+          <ion-icon name="trash-outline"></ion-icon>
+          Borrar
+        </ion-button>
+      </div>
+    </ion-item>
+  </ion-list>
 </ion-content>
+
+
+<style>
+  .header-toolbar {
+  --background: #E75480 !important; /* Rosa bajito */
+}
+
+  .task-list {
+    border-radius: 10px;
+    padding: 10px;
+  }
+
+  .task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .button-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  ion-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+  ion-content {
+  --background: #ffe6f2 !important;
+}
+
+</style>
